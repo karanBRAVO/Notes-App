@@ -1,0 +1,203 @@
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="./favicons/favicon.ico"
+      type="image/x-icon"
+    />
+    <title>Short Notes</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script defer src="./js/index.js"></script>
+  </head>
+
+  <body id="body">
+    {{! show messages }}
+    <div class="messageBox userSelectNone" id="showInfo_top">
+      <div class="innerMsgCont" style="background-color: {{msgColor}};">
+        <span id="info">{{msg}}</span>
+      </div>
+    </div>
+    {{! hidden layer }}
+    <div id="hiddenLayer"></div>
+    {{! modify note }}
+    <div class="fixedCont" id="modifyNoteDiv">
+      <form
+        action="#"
+        method="post"
+        class="fixedInnerCont"
+        id="modifyNote_form"
+        style="background-color: #f94a29; border-color: #f94a29"
+      >
+        <div class="crossCont" style="background-color: #f94a29">
+          <div class="crossSign" id="modify_crossSign">
+            <span class="userSelectNone" style="color: #f94a29">x</span>
+          </div>
+        </div>
+        <div class="addNoteCont">
+          <div class="headingCont" style="background-color: #f94a29">
+            <div class="heading" style="background-color: #f94a29">
+              <h3 class="userSelectNone">Modify title</h3>
+            </div>
+          </div>
+          <div class="inputCont">
+            <input
+              type="text"
+              name="modify_userTitle"
+              class="userSelectNone"
+              id="modify_note_title"
+              placeholder="add new note title"
+              autocomplete="off"
+              style="background-color: #f94a29"
+            />
+          </div>
+          <div class="headingCont" style="background-color: #f94a29">
+            <div class="heading" style="background-color: #f94a29">
+              <h3 class="userSelectNone">Modify Note Description</h3>
+            </div>
+          </div>
+          <div class="msgCont">
+            <textarea
+              name="modify_userNote"
+              class="userSelectNone"
+              id="modify_userNote"
+              cols="30"
+              rows="10"
+              placeholder="enter your note Description"
+              style="background-color: #f94a29"
+            ></textarea>
+          </div>
+          <div class="buttonCont" style="background-color: #f94a29">
+            <button
+              class="userSelectNone"
+              id="modifyNoteBtn"
+              style="color: #f94a29"
+            >
+              Modify Note
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    {{! add new note }}
+    <div class="fixedCont" id="addNoteDiv">
+      <form
+        action="/shortNotesByKaranYadav/add-data"
+        method="post"
+        class="fixedInnerCont"
+      >
+        <div class="crossCont">
+          <div class="crossSign" id="crossSign">
+            <span class="userSelectNone">x</span>
+          </div>
+        </div>
+        <div class="addNoteCont">
+          <div class="headingCont">
+            <div class="heading">
+              <h3 class="userSelectNone">Add Title</h3>
+            </div>
+          </div>
+          <div class="inputCont">
+            <input
+              type="text"
+              name="userNote_title"
+              class="userSelectNone"
+              id="note_title"
+              placeholder="add note title"
+              autocomplete="off"
+            />
+          </div>
+          <div class="headingCont">
+            <div class="heading">
+              <h3 class="userSelectNone">Add Note Description</h3>
+            </div>
+          </div>
+          <div class="msgCont">
+            <textarea
+              name="userNote_desc"
+              class="userSelectNone"
+              id="userNote"
+              cols="30"
+              rows="10"
+              placeholder="enter your note Description"
+            ></textarea>
+          </div>
+          <div class="dateCont">
+            <input type="hidden" name="userNote_date" id="userNote_date" />
+          </div>
+          <div class="buttonCont">
+            <button class="userSelectNone" id="addNoteBtn">Add Note</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    {{! main container }}
+    <div class="container" id="mainCont">
+      <div class="innerContainer" id="mainInnerCont">
+        {{! Add new note button }}
+        <div class="signCont" id="addNewNoteIcon">
+          <div class="sign" id="addIconCont">
+            <span id="addIcon">+</span>
+          </div>
+          <div class="toolTipCont">
+            <span class="toolTip">Add note</span>
+          </div>
+        </div>
+        <!-- Show Notes -->
+        {{#each data}}
+          <div class="noteCont">
+            <div class="options">
+              <div class="dateCreatedCont">
+                <div class="spanContDate">
+                  <span>{{this.note_date}}</span>
+                </div>
+              </div>
+              {{! options (edit & delete) }}
+              <div class="optionsLinksCont" id="edit_delete_{{this._id}}">
+                <button
+                  class="mainoptionCont"
+                  onclick="getEditWindow(edit_delete_{{this._id}}, '{{this.note_title}}', '{{this.note_desc}}', '{{this._id}}')"
+                >
+                  <img src="./img/edit.svg" alt="" draggable="false" />
+                  <div class="spanOption">
+                    <span class="userSelectNone">Edit</span>
+                  </div>
+                </button>
+                <form action="/delete-document/{{this._id}}" method="post">
+                  <button class="mainoptionCont">
+                    <img
+                      src="./img/delete.svg"
+                      alt=""
+                      draggable="false"
+                      class="optionsIcon"
+                    />
+                    <div class="spanOption">
+                      <span class="userSelectNone">Delete</span>
+                    </div>
+                  </button>
+                </form>
+              </div>
+              {{! get options button }}
+              <div
+                class="optionsCont"
+                onclick="getOptions_edit_del(edit_delete_{{this._id}})"
+              >
+                <span class="userSelectNone">...</span>
+              </div>
+            </div>
+            <div class="noteHeading">
+              <span>{{this.note_title}}</span>
+            </div>
+            <div class="note">
+              <span>{{this.note_desc}}</span>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </body>
+
+</html>
